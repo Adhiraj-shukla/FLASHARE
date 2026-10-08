@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flashare – serverless file drop</title>
+<link rel="stylesheet" href="css/style.css">
+</head><body>
+<main>
+ <header class="top">
+  <div><h1>Flashare</h1><p class="sub">Send files straight from one browser to another. No server, no account.</p></div>
+  <button class="me" id="meBtn" aria-label="Edit profile and theme"><span class="av sm" id="meBtnAv"></span><span id="meBtnName">You</span></button>
+ </header>
+
+ <section class="card link s-idle" id="link">
+  <div class="who"><div class="av" id="meAv"></div><span id="meName">You</span></div>
+  <div class="wire"></div>
+  <div class="who"><div class="av ghost" id="peerAv">?</div><span id="peerName">Waiting for a peer</span></div>
+  <p class="status" role="status"><span class="badge"><span id="bIcon" aria-hidden="true">○</span><span id="bTxt">Idle</span></span><span id="stxt">Not connected</span></p>
+ </section>
+
+ <section class="card" id="setup">
+  <ol class="steps" id="steps" aria-label="Connection steps">
+   <li aria-current="step">Sender creates an offer and shares the code or link</li>
+   <li>Receiver pastes it and creates an answer</li>
+   <li>Sender pastes the answer and connects</li>
+   <li>Send files and messages</li>
+  </ol>
+  <div class="seg" role="tablist"><button class="on" id="tS">Send</button><button id="tR">Receive</button></div>
+  <div id="roles">
+  <div id="pS">
+   <h3 class="role-h">Sender</h3>
+   <p class="m">Create an offer, give the code or link to the receiver, then paste back their answer.</p>
+   <button class="pri" id="mkOffer">Create offer</button>
+   <div id="offerBox" class="hide">
+    <label class="l" for="offerOut">Offer code</label><textarea id="offerOut" readonly></textarea>
+    <div class="row"><button id="cpOffer">Copy code</button><button id="cpLink">Copy link</button></div>
+    <label class="l" for="ansIn">Answer code from receiver</label><textarea id="ansIn"></textarea>
+    <div class="row"><button class="pri" id="applyAns">Connect</button></div>
+   </div>
+  </div>
+  <div id="pR" class="hide">
+   <h3 class="role-h">Receiver</h3>
+   <label class="l first" for="offIn">Offer code from sender</label><textarea id="offIn"></textarea>
+   <div class="row"><button class="pri" id="mkAns">Create answer</button></div>
+   <div id="ansBox" class="hide">
+    <label class="l" for="ansOut">Answer code (send this back)</label><textarea id="ansOut" readonly></textarea>
+    <div class="row"><button id="cpAns">Copy code</button></div>
+   </div>
+  </div>
+  </div>
+  <label class="m demo"><input type="checkbox" id="demo"> Same-device demo: connect two tabs automatically</label>
+  <details><summary>Network options</summary>
+   <label class="l" for="stun">STUN server (helps connect across different networks)</label>
+   <input type="text" id="stun" value="stun:stun.l.google.com:19302">
+   <label class="m demo"><input type="checkbox" id="noStun"> Same network only (no STUN)</label>
+   <p class="m">Public STUN servers are run by third parties. Availability is not guaranteed, so check their terms before relying on one. Only your network address is shared with it, never your files.</p>
+  </details>
+  <details><summary>Connection trouble?</summary><ul>
+   <li>Paste the full code with no extra spaces or line breaks.</li>
+   <li>Codes stop working when the tab closes. Create a new offer to retry.</li>
+   <li>Strict office networks and some VPNs block direct links. Try another network or a phone hotspot.</li>
+   <li>Devices on the same Wi-Fi connect fastest. Mobile carriers often block peer links.</li>
+   <li>Demo mode only works between tabs of this page in the same browser.</li>
+  </ul></details>
+ </section>
+
+ <section class="card hide" id="sess">
+  <h2>Files</h2>
+  <div class="drop" id="drop" tabindex="0" role="button">Drop files here or click to choose</div>
+  <input type="file" id="pick" multiple class="hide">
+  <div id="trs"></div>
+ </section>
+
+ <section class="card hide" id="chat">
+  <h2>Messages</h2>
+  <div id="log" aria-live="polite"></div>
+  <div class="row"><input type="text" id="msg" placeholder="Type a message" class="grow"><button class="pri" id="sendMsg">Send</button></div>
+ </section>
+</main>
+
+<dialog id="prof">
+ <h2>Your profile</h2>
+ <div class="prow">
+  <div class="av lg" id="pAv"></div>
+  <div class="pcol">
+   <div class="row nm"><button id="pUp">Upload photo</button><button id="pRm">Remove</button></div>
+   <input type="file" id="pFile" accept="image/*" class="hide">
+   <p class="m" id="pErr">Photos are cropped to a square and shared only with your peer.</p>
+  </div>
+ </div>
+ <label class="l" for="pName">Display name</label>
+ <input type="text" id="pName" maxlength="24" placeholder="Your name">
+ <label class="l">Theme</label>
+ <div class="themes" id="themes"></div>
+ <label class="l" for="pAcc">Accent colour</label>
+ <div class="row nm"><input type="color" id="pAcc"><button id="pAccReset">Use theme colour</button></div>
+ <div class="row end"><button class="pri" id="profDone">Done</button></div>
+</dialog>
+<script type="module" src="js/main.js"></script>
+</body></html>
