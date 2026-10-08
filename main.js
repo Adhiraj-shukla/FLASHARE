@@ -1,7 +1,8 @@
 // Entry point: wires peer, signalling, transfer, profile and UI together.
 import { Peer, DEFAULT_STUN } from './peer.js';
 import { Transfer } from './transfer.js';
-import { linkFor, codeFromHash } from './signal.js';
+import { linkFor, codeFromHash, extractCode } from './signal.js';
+import { drawQr } from './qr.js';
 import { demoChannel } from './demo-channel.js';
 import * as profile from './profile.js';
 import * as ui from './ui.js';
@@ -42,6 +43,7 @@ if (!demo.available) $('demo').disabled = true;
 async function makeOffer() {
   const code = await peer.createOffer();
   $('offerOut').value = code; $('offerBox').classList.remove('hide'); ui.setStep(2);
+  showQr('offerQr', 'offerQrNote', linkFor(code));
   if ($('demo').checked) demo.post({ k: 'offer', code });
 }
 async function applyAnswer(code) {
@@ -52,6 +54,7 @@ async function makeAnswer(code) {
   try {
     const a = await peer.createAnswer(code);
     $('ansOut').value = a; $('ansBox').classList.remove('hide'); ui.setStep(3);
+    showQr('ansQr', 'ansQrNote', a);
     return a;
   } catch (e) { ui.setStatus('failed', 'Bad offer code: ' + e.message); }
 }
@@ -65,6 +68,12 @@ ui.copyButton('cpOffer', () => $('offerOut').value, 'Copy code');
 ui.copyButton('cpAns', () => $('ansOut').value, 'Copy code');
 ui.copyButton('cpLink', () => linkFor($('offerOut').value), 'Copy link');
 ui.bindDrop(files => transfer && transfer.sendAll(files));
+
+// QR: the offer QR holds a link (so a phone camera can open it); the answer QR holds the bare code.
+const showQr = (canvas, note, text) => drawQr($(canvas), text)
+  .then(() => { $(canvas).classList.remove('hide'); $(note).classList.remove('hide'); }).catch(() => {});
+$('scanAns').onclick = () => ui.openScanner('Scan the receiver\'s answer QR', t => { const c = extractCode(t); $('ansIn').value = c; applyAnswer(c); });
+$('scanOff').onclick = () => ui.openScanner('Scan the sender\'s offer QR', t => { const c = extractCode(t); $('offIn').value = c; makeAnswer(c); });
 
 const sendMsg = () => {
   const t = $('msg').value.trim();

@@ -111,3 +111,9 @@ button.copied{background:var(--acc);color:var(--accink);border-color:var(--acc)}
  .role-h{display:block}.seg{display:none}
  .steps{grid-auto-flow:column;grid-auto-columns:1fr}.steps li{flex-direction:column}
 }
+
+/* QR */
+.qr{display:block;width:min(240px,100%);height:auto;image-rendering:pixelated;border-radius:10px;margin-top:12px;background:#fff}
+.qrnote{margin-top:6px}
+#scanVideo{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#000;border-radius:12px;margin:10px 0}
+dialog#scan{width:min(440px,calc(100% - 32px))}

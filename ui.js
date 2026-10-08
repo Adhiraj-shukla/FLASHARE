@@ -1,5 +1,6 @@
 // All DOM work lives here.
 import { get, avatarEl, safeAvatar, safeName } from './profile.js';
+import { scanQr } from './qr.js';
 export const $ = id => document.getElementById(id);
 
 const fmt = n => n < 1024 ? n + ' B' : n < 1048576 ? (n / 1024).toFixed(1) + ' KB' : n < 1073741824 ? (n / 1048576).toFixed(1) + ' MB' : (n / 1073741824).toFixed(2) + ' GB';
@@ -141,4 +142,19 @@ export function bindProfile(P, onChange) {
     try { $('pErr').textContent = 'Photos are cropped to a square and shared only with your peer.'; edit({ avatar: await P.resizeAvatar(f) }); }
     catch (err) { $('pErr').textContent = err.message; }
   };
+}
+
+// Camera scanner dialog. onCode receives the raw text of the first QR code found.
+export async function openScanner(title, onCode) {
+  const d = $('scan');
+  $('scanTitle').textContent = title; $('scanMsg').textContent = 'Point the camera at the QR code.';
+  let stop = () => {};
+  const close = () => { stop(); if (d.open) d.close(); };
+  $('scanCancel').onclick = close; d.onclose = () => stop();
+  d.showModal();
+  try {
+    stop = await scanQr($('scanVideo'), text => { close(); onCode(text); },
+      () => { $('scanMsg').textContent = 'Camera unavailable. Allow camera access (needs https), or paste the code instead.'; });
+  } catch { $('scanMsg').textContent = 'The QR scanner could not load. Paste the code instead.'; }
+  if (!d.open) stop();
 }

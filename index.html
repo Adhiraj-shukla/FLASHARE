@@ -33,17 +33,21 @@
    <div id="offerBox" class="hide">
     <label class="l" for="offerOut">Offer code</label><textarea id="offerOut" readonly></textarea>
     <div class="row"><button id="cpOffer">Copy code</button><button id="cpLink">Copy link</button></div>
+    <canvas id="offerQr" class="qr hide" aria-label="QR code containing the offer link"></canvas>
+    <p class="m qrnote hide" id="offerQrNote">Scan with the other device's camera to open Flashare with this offer filled in.</p>
     <label class="l" for="ansIn">Answer code from receiver</label><textarea id="ansIn"></textarea>
-    <div class="row"><button class="pri" id="applyAns">Connect</button></div>
+    <div class="row"><button class="pri" id="applyAns">Connect</button><button id="scanAns">Scan answer QR</button></div>
    </div>
   </div>
   <div id="pR" class="hide">
    <h3 class="role-h">Receiver</h3>
    <label class="l first" for="offIn">Offer code from sender</label><textarea id="offIn"></textarea>
-   <div class="row"><button class="pri" id="mkAns">Create answer</button></div>
+   <div class="row"><button class="pri" id="mkAns">Create answer</button><button id="scanOff">Scan offer QR</button></div>
    <div id="ansBox" class="hide">
     <label class="l" for="ansOut">Answer code (send this back)</label><textarea id="ansOut" readonly></textarea>
     <div class="row"><button id="cpAns">Copy code</button></div>
+    <canvas id="ansQr" class="qr hide" aria-label="QR code containing the answer"></canvas>
+    <p class="m qrnote hide" id="ansQrNote">The sender can scan this with "Scan answer QR".</p>
    </div>
   </div>
   </div>
@@ -76,6 +80,13 @@
   <div class="row"><input type="text" id="msg" placeholder="Type a message" class="grow"><button class="pri" id="sendMsg">Send</button></div>
  </section>
 </main>
+
+<dialog id="scan">
+ <h2 id="scanTitle">Scan QR code</h2>
+ <video id="scanVideo" playsinline muted></video>
+ <p class="m" id="scanMsg">Point the camera at the QR code.</p>
+ <div class="row end"><button id="scanCancel">Cancel</button></div>
+</dialog>
 
 <dialog id="prof">
  <h2>Your profile</h2>
